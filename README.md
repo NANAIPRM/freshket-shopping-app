@@ -4,15 +4,9 @@
 [![Dart Version](https://img.shields.io/badge/Dart-3.3.0-blue.svg)](https://dart.dev/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-A short description of your application. Explain what your app does in 1-2 sentences.
+"This project developed for the Freshket technical assessment. This application implements  Feature-First Architecture with BLoC pattern for state management, showcasing scalable code organization and UI across multiple device formats."
 
 ![App Screenshot](screenshots/app_screenshot.png)
-
-## Features
-
-- Feature 1: Brief description
-- Feature 2: Brief description
-- Feature 3: Brief description
 
 ## Getting Started
 
@@ -73,46 +67,17 @@ For IDE integration:
 ```
 ```
 lib/
-├── config/                      # Configuration Layer
-│   └── app_config.dart
-├── data/                        # Data Layer
-│   ├── models/                  # Data Models
-│   │   ├── cart_item.dart
-│   │   └── product.dart
-│   └── services/                # API Services
-│       └── api_service.dart
-├── logic/                       # Business Logic Layer
-│   └── blocs/                   # BLoC State Management
-│       ├── cart/                # Cart Feature
-│       │   ├── cart_bloc.dart
-│       │   ├── cart_event.dart
-│       │   └── cart_state.dart
-│       ├── latest_product/      # Latest Product Feature
-│       │   ├── latest_product_bloc.dart
-│       │   ├── latest_product_event.dart
-│       │   └── latest_product_state.dart
-│       └── recommend_product/   # Recommend Product Feature
-│           ├── recommended_product_bloc.dart
-│           ├── recommended_product_event.dart
-│           └── recommended_product_state.dart
-├── ui/                          # Presentation Layer
-│   ├── pages/                   # App Screens/Pages
-│   │   ├── cart_page.dart
-│   │   ├── checkout_success_page.dart
-│   │   └── home_page.dart
-│   └── widget/                  # UI Components
-│       └── common/              # Shared Widgets
-│           ├── bottom_loading_indicator.dart
-│           ├── custom_bottom_navigation_bar.dart
-│           ├── product_list_item.dart
-│           └── product_shimmer_item.dart
-└── main.dart                    # App Entry Point
+├── config/               # Configuration Layer
+├── data/                 # Data Layer
+├── logic/                # Business Logic Layer
+├── ui/                   # Presentation Layer
+└── main.dart             # App Entry Point
 ```
 ```
 
 ## Architecture
 
-This app follows the Feature-First Architecture architecture pattern. 
+This app follows the Feature-First Architecture pattern. 
 - Team Collaboration: Different developers or teams can work on separate features simultaneously with minimal code conflicts
 - Scalability: Adding new features doesn't disrupt existing code structure
 - Feature Reusability: Makes it easier to reuse or extract features for other projects
