@@ -6,7 +6,11 @@
 
 "This project developed for the Freshket technical assessment. This application implements  Feature-First Architecture with BLoC pattern for state management, showcasing scalable code organization and UI across multiple device formats."
 
-![App Screenshot](screenshots/app_screenshot.png)
+![screenshot1](https://github.com/user-attachments/assets/27f7f74f-390f-44b0-bc91-def888560cf8)
+![screenshot2](https://github.com/user-attachments/assets/7f623b6a-23af-48e4-bf23-6263131df459)
+![screenshot3](https://github.com/user-attachments/assets/905955ee-4e94-4ad6-9b78-0610e6d049bb)
+![screenshot4](https://github.com/user-attachments/assets/ad323c08-a94c-49aa-a669-e29b48ded098)
+
 
 ## Getting Started
 
