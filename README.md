@@ -1,6 +1,6 @@
-# FRESHKET_SHOPPING_APP
+# App Name
 
-[![Flutter Version](https://img.shields.io/badge/Flutter-3.19.0-blue.svg)](https://flutter.dev/)
+[![Flutter Version](https://img.shields.io/badge/Flutter-3.24.5-blue.svg)](https://flutter.dev/)
 [![Dart Version](https://img.shields.io/badge/Dart-3.3.0-blue.svg)](https://dart.dev/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
@@ -18,8 +18,9 @@ A short description of your application. Explain what your app does in 1-2 sente
 
 ### Prerequisites
 
-- Flutter SDK (version X.X.X or higher)
-- Dart SDK (version X.X.X or higher)
+- [FVM (Flutter Version Management)](https://fvm.app/)
+- Flutter SDK 3.24.5 (managed by FVM)
+- Dart SDK (compatible with Flutter 3.24.5)
 - Android Studio / VS Code / IntelliJ IDEA
 - Android SDK (for Android development)
 - Xcode (for iOS development, macOS only)
@@ -28,36 +29,85 @@ A short description of your application. Explain what your app does in 1-2 sente
 
 1. Clone the repository
    ```bash
-   git clone https://github.com/username/app-name.git
+   git clone https://github.com/NANAIPRM/freshket-shopping-app.git
    ```
 
-2. Navigate to the project directory
+2. Navigate to the development branch
    ```bash
-   cd app-name
+   git checkout develop
    ```
 
-3. Install dependencies
+3. Setup FVM with the correct Flutter version
    ```bash
-   flutter pub get
+   fvm install 3.24.5
+   fvm use 3.24.5
    ```
 
-4. Run the app
+4. Install dependencies
    ```bash
-   flutter run
+   fvm flutter pub get
    ```
+
+5. Run the app
+   ```bash
+   fvm flutter run
+   ```
+
+## FVM Configuration
+
+This project uses Flutter Version Management (FVM) to ensure all developers use the same Flutter version (3.24.5). The configuration is in `.fvm/fvm_config.json`.
+
+```json
+{
+  "flutterSdkVersion": "3.24.5",
+  "flavors": {}
+}
+```
+
+For IDE integration:
+- **VS Code**: FVM extension is recommended
+- **Android Studio/IntelliJ**: Configure to use the FVM Flutter SDK path
 
 ## Project Structure
 
 ```
+```
 lib/
-├── api/                  # API services
-├── config/               # Configuration files
-├── models/               # Data models
-├── providers/            # State management
-├── screens/              # UI screens
-├── utils/                # Utility functions
-├── widgets/              # Reusable widgets
-└── main.dart             # Entry point
+├── config/                      # Configuration Layer
+│   └── app_config.dart
+├── data/                        # Data Layer
+│   ├── models/                  # Data Models
+│   │   ├── cart_item.dart
+│   │   └── product.dart
+│   └── services/                # API Services
+│       └── api_service.dart
+├── logic/                       # Business Logic Layer
+│   └── blocs/                   # BLoC State Management
+│       ├── cart/                # Cart Feature
+│       │   ├── cart_bloc.dart
+│       │   ├── cart_event.dart
+│       │   └── cart_state.dart
+│       ├── latest_product/      # Latest Product Feature
+│       │   ├── latest_product_bloc.dart
+│       │   ├── latest_product_event.dart
+│       │   └── latest_product_state.dart
+│       └── recommend_product/   # Recommend Product Feature
+│           ├── recommended_product_bloc.dart
+│           ├── recommended_product_event.dart
+│           └── recommended_product_state.dart
+├── ui/                          # Presentation Layer
+│   ├── pages/                   # App Screens/Pages
+│   │   ├── cart_page.dart
+│   │   ├── checkout_success_page.dart
+│   │   └── home_page.dart
+│   └── widget/                  # UI Components
+│       └── common/              # Shared Widgets
+│           ├── bottom_loading_indicator.dart
+│           ├── custom_bottom_navigation_bar.dart
+│           ├── product_list_item.dart
+│           └── product_shimmer_item.dart
+└── main.dart                    # App Entry Point
+```
 ```
 
 ## Architecture
@@ -69,7 +119,13 @@ This app follows the Feature-First Architecture architecture pattern.
 
 ## State Management
 
-This project uses [State Management Solution] for state management. [Brief explanation of why you chose this solution]
+This project uses Bloc for state management. 
+
+- Separation of Logic and UI: BLoC separates business logic from UI, making the code easier to maintain and test.
+- Efficient State Management: It uses Streams to manage state changes efficiently without refreshing the entire UI.
+- Reactive Programming: BLoC is ideal for real-time updates, such as loading data from APIs or databases.
+- Testability: Business logic can be tested independently of the UI, improving test coverage.
+- Clean and Standardized Code: BLoC promotes clean, maintainable, and standardized code, making collaboration easier in the long term.
 
 ## Dependencies
 
@@ -78,21 +134,17 @@ This project uses [State Management Solution] for state management. [Brief expla
 - `shared_preferences`: ^2.2.0 - For local storage
 - `flutter_bloc`: ^8.1.3 - For BLoC pattern implementation
 
-## API Reference
-
-The app uses [API Name] for [purpose]. Documentation can be found [here](link-to-api-docs).
-
 ## Testing
 
 ```bash
 # Run unit tests
-flutter test
+fvm flutter test
 
 # Run widget tests
-flutter test test/widget_test.dart
+fvm flutter test test/widget_test.dart
 
 # Run integration tests
-flutter test integration_test
+fvm flutter test integration_test
 ```
 
 ## Deployment
@@ -108,7 +160,7 @@ flutter test integration_test
 
 3. Build the APK
    ```bash
-   flutter build apk --release
+   fvm flutter build apk --release
    ```
 
 ### iOS
@@ -122,28 +174,9 @@ flutter test integration_test
 
 3. Build the app
    ```bash
-   flutter build ios --release
+   fvm flutter build ios --release
    ```
-
-## Contributing
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- [Person/Library/Resource] - For [reason]
-- [Person/Library/Resource] - For [reason]
 
 ## Contact
 
-Developer Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@example.com
-
-Project Link: [https://github.com/username/app-name](https://github.com/username/app-name)
+Developer Name - Porramat Chairattanah - porramat.cha@gmail.com
