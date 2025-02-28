@@ -39,6 +39,13 @@ class CartLoaded extends CartState {
   }
 }
 
+class CartCheckoutSuccess extends CartState {
+  const CartCheckoutSuccess();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class CartError extends CartState {
   final String message;
 

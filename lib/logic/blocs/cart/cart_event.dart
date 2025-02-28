@@ -43,3 +43,10 @@ class ClearCartEvent extends CartEvent {
   @override
   List<Object?> get props => [];
 }
+
+class CheckoutEvent extends CartEvent {
+  const CheckoutEvent();
+
+  @override
+  List<Object?> get props => [];
+}

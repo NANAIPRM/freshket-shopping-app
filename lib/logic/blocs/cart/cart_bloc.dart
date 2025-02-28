@@ -1,15 +1,19 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freshket_shopping_app/data/services/api_service.dart';
 import 'cart_event.dart';
 import 'cart_state.dart';
 import '../../../data/models/cart_item.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
-  CartBloc()
-      : super(const CartLoaded(items: [], total: 0.0, totalDiscount: 0.0)) {
+  final ApiService _apiService;
+  CartBloc({required ApiService apiService})
+      : _apiService = apiService,
+        super(const CartLoaded(items: [], total: 0.0, totalDiscount: 0.0)) {
     on<AddToCartEvent>(_onAddToCart);
     on<RemoveFromCartEvent>(_onRemoveFromCart);
     on<UpdateCartItemQuantityEvent>(_onUpdateCartItemQuantity);
     on<ClearCartEvent>(_onClearCart);
+    on<CheckoutEvent>(_onCheckout);
   }
 
   void _onAddToCart(
@@ -146,6 +150,30 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
 
     return CalculationResult(total: total, discount: totalDiscount);
+  }
+
+  void _onCheckout(CheckoutEvent event, Emitter<CartState> emit) async {
+    if (state is! CartLoaded) return;
+
+    final currentState = state as CartLoaded;
+
+    try {
+      // Convert cart items to product IDs
+      final productIds =
+          currentState.items.map((item) => item.product.id).toList();
+
+      // Call the checkout method in ApiService
+      await _apiService.checkout(productIds);
+
+      // Clear the cart after successful checkout
+      emit(const CartLoaded(items: [], total: 0.0, totalDiscount: 0.0));
+
+      // Emit success state to trigger navigation
+      emit(const CartCheckoutSuccess());
+    } catch (e) {
+      // Handle checkout error
+      emit(CartError('ไม่สามารถชำระเงินได้: $e'));
+    }
   }
 }
 

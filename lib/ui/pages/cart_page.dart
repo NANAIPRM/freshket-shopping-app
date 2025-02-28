@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../../logic/blocs/cart/cart_bloc.dart';
 import '../../../logic/blocs/cart/cart_state.dart';
 import '../../../logic/blocs/cart/cart_event.dart';
@@ -10,39 +11,75 @@ class CartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CartBloc, CartState>(
-      builder: (context, state) {
-        if (state is CartLoaded) {
-          return state.items.isEmpty
-              ? _buildEmptyCart(context)
-              : _buildCartList(context, state);
+    return BlocListener<CartBloc, CartState>(
+      listener: (context, state) {
+        if (state is CartCheckoutSuccess) {
+          context.goNamed('checkout-success');
         }
-        return const Center(child: CircularProgressIndicator());
       },
+      child: BlocBuilder<CartBloc, CartState>(
+        builder: (context, state) {
+          if (state is CartLoaded) {
+            return state.items.isEmpty
+                ? _buildEmptyCart(context)
+                : _buildCartList(context, state);
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
+      ),
     );
   }
 
   Widget _buildEmptyCart(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.shopping_cart_outlined,
-            size: 80,
-            color: Colors.grey,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'ตะกร้าสินค้าว่างเปล่า',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'เพิ่มสินค้าในหน้าแนะนำสินค้าเพื่อเริ่มการสั่งซื้อ',
-            style: TextStyle(color: Colors.grey),
-          ),
-        ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Cart'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            // Use GoRouter to navigate back to home
+            context.goNamed('home');
+          },
+        ),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Empty Cart',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                // Use GoRouter to navigate to home
+                context.goNamed('home');
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).primaryColor,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                  vertical: 12,
+                ),
+              ),
+              child: const Text(
+                'Go to shopping',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -280,7 +317,7 @@ class CartPage extends StatelessWidget {
                 ElevatedButton(
                   onPressed: state.items.isNotEmpty
                       ? () {
-                          // TODO: Implement checkout logic
+                          context.read<CartBloc>().add(const CheckoutEvent());
                         }
                       : null,
                   style: ElevatedButton.styleFrom(

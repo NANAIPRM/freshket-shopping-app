@@ -50,9 +50,7 @@ class ApiService {
 
   Future<List<Product>> getRecommendedProducts() async {
     try {
-      print('eiei:2');
       final response = await _dio.get(AppConfig.recommendedProductsPath);
-      print('eiei3:${response}');
 
       if (response.statusCode == 200) {
         return (response.data as List)
@@ -78,7 +76,7 @@ class ApiService {
       }
 
       final response = await _dio.get(
-        '/products',
+        AppConfig.productsPath,
         queryParameters: queryParams,
       );
 
@@ -99,6 +97,28 @@ class ApiService {
     } catch (e) {
       print(e);
       throw e is DioException ? _getErrorMessage(e) : 'เกิดข้อผิดพลาด: $e';
+    }
+  }
+
+  Future<dynamic> checkout(List<int> productIds) async {
+    try {
+      final response = await _dio.post(AppConfig.checkoutPath,
+          data: {'products': productIds},
+          options: Options(
+              headers: {'Content-Type': 'application/json', 'accept': '*/*'}));
+
+      if (response.statusCode == 204) {
+        // Return the response data if checkout is successful
+        return response.data;
+      } else {
+        // Throw an error if the checkout fails
+        throw 'ไม่สามารถทำการชำระเงินได้: ${response.statusCode}';
+      }
+    } catch (e) {
+      print(e);
+      throw e is DioException
+          ? _getErrorMessage(e)
+          : 'เกิดข้อผิดพลาดในการชำระเงิน: $e';
     }
   }
 

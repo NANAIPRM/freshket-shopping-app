@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freshket_shopping_app/ui/pages/checkout_success_page.dart';
+import 'package:go_router/go_router.dart';
 import 'package:freshket_shopping_app/data/services/api_service.dart';
 import 'package:freshket_shopping_app/logic/blocs/recommend_product/recommended_product_bloc.dart';
 import 'package:freshket_shopping_app/logic/blocs/latest_product/latest_product_bloc.dart';
@@ -11,6 +13,47 @@ import 'package:freshket_shopping_app/ui/widget/common/custom_bottom_navigation_
 void main() {
   runApp(const MyApp());
 }
+
+// Define routes using GoRouter
+final GoRouter _router = GoRouter(
+  initialLocation: '/',
+  routes: [
+    ShellRoute(
+      builder: (context, state, child) {
+        return RootLayout(child: child);
+      },
+      routes: [
+        GoRoute(
+          path: '/',
+          name: 'home',
+          pageBuilder: (context, state) {
+            return NoTransitionPage(
+              child: HomePage(),
+            );
+          },
+        ),
+        GoRoute(
+          path: '/cart',
+          name: 'cart',
+          pageBuilder: (context, state) {
+            return NoTransitionPage(
+              child: CartPage(),
+            );
+          },
+        ),
+        GoRoute(
+          path: '/checkout-success',
+          name: 'checkout-success',
+          pageBuilder: (context, state) {
+            return NoTransitionPage(
+              child: CheckoutSuccessPage(),
+            );
+          },
+        ),
+      ],
+    ),
+  ],
+);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -27,10 +70,10 @@ class MyApp extends StatelessWidget {
           create: (context) => LatestProductBloc(apiService: apiService),
         ),
         BlocProvider<CartBloc>(
-          create: (context) => CartBloc(),
+          create: (context) => CartBloc(apiService: apiService),
         ),
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
         title: 'Freshket Shopping App',
         theme: ThemeData(
           useMaterial3: true,
@@ -40,50 +83,58 @@ class MyApp extends StatelessWidget {
             primary: Colors.deepPurple,
           ),
         ),
-        home: const MyHomePage(title: 'Freshket Shopping App'),
+        routerConfig: _router,
       ),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+// Root layout that contains the bottom navigation bar
+class RootLayout extends StatelessWidget {
+  final Widget child;
 
-  final String title;
+  const RootLayout({super.key, required this.child});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
+  // In your RootLayout class
   @override
   Widget build(BuildContext context) {
+    // Get the current route location
+    final String location = GoRouterState.of(context).matchedLocation;
+    int currentIndex = 0;
+
+    // Determine which tab is currently active
+    if (location.startsWith('/cart')) {
+      currentIndex = 1;
+    }
+
+    // Check if we're on the success page
+    final bool isSuccessPage = location.startsWith('/checkout-success');
+
     return Scaffold(
-      appBar: _selectedIndex == 0
+      appBar: (currentIndex == 0 && !isSuccessPage)
           ? AppBar(
               backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-              title: Text(widget.title),
+              title: const Text('Freshket Shopping App'),
             )
           : null,
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: const [
-          HomePage(),
-          CartPage(),
-        ],
-      ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        selectedIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
+      body: child,
+      bottomNavigationBar: isSuccessPage
+          ? null
+          : CustomBottomNavigationBar(
+              selectedIndex: currentIndex,
+              onTap: (index) {
+                // Handle navigation with GoRouter
+                switch (index) {
+                  case 0:
+                    context.goNamed('home');
+                    break;
+                  case 1:
+                    context.goNamed('cart');
+                    break;
+                }
+              },
+            ),
     );
   }
 }

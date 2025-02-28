@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:freshket_shopping_app/data/models/product.dart';
+import 'package:freshket_shopping_app/data/services/api_service.dart';
 import 'package:freshket_shopping_app/logic/blocs/cart/cart_bloc.dart';
 import 'package:freshket_shopping_app/logic/blocs/cart/cart_event.dart';
 import 'package:freshket_shopping_app/logic/blocs/cart/cart_state.dart';
@@ -7,9 +8,10 @@ import 'package:freshket_shopping_app/logic/blocs/cart/cart_state.dart';
 void main() {
   group('CartBloc', () {
     late CartBloc cartBloc;
+    var apiService = ApiService();
 
     setUp(() {
-      cartBloc = CartBloc();
+      cartBloc = CartBloc(apiService: apiService);
     });
 
     tearDown(() {

@@ -14,6 +14,7 @@ class AppConfig {
 
   static const String recommendedProductsPath = '/recommended-products';
   static const String productsPath = '/products';
+  static const String checkoutPath = '/orders/checkout';
 
   static const bool debugMode = bool.fromEnvironment(
     'DEBUG_MODE',
