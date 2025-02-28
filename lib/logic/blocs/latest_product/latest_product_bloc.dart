@@ -46,6 +46,9 @@ class LatestProductBloc extends Bloc<LatestProductEvent, LatestProductState> {
     _nextCursor = null;
     _currentProducts = [];
     _hasReachedMax = false;
+
+    emit(const LatestProductLoading(products: []));
+
     await _fetchProducts(emit);
   }
 

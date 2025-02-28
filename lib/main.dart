@@ -34,10 +34,10 @@ class MyApp extends StatelessWidget {
         title: 'Freshket Shopping App',
         theme: ThemeData(
           useMaterial3: true,
-          primaryColor: Colors.purple,
+          primaryColor: Colors.deepPurple,
           colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.purple,
-            primary: Colors.purple,
+            seedColor: Colors.deepPurple,
+            primary: Colors.deepPurple,
           ),
         ),
         home: const MyHomePage(title: 'Freshket Shopping App'),

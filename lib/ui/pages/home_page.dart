@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freshket_shopping_app/logic/blocs/cart/cart_bloc.dart';
+import 'package:freshket_shopping_app/logic/blocs/cart/cart_event.dart';
 import 'package:freshket_shopping_app/logic/blocs/recommend_product/recommended_product_bloc.dart';
 import 'package:freshket_shopping_app/logic/blocs/recommend_product/recommended_product_event.dart';
 import 'package:freshket_shopping_app/logic/blocs/recommend_product/recommended_product_state.dart';
@@ -38,6 +40,16 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  Future<void> _refreshData() async {
+    context.read<RecommendedProductBloc>().add(FetchRecommendedProductsEvent());
+    context.read<LatestProductBloc>().add(RefreshLatestProductsEvent());
+
+    // Clear the cart
+    context.read<CartBloc>().add(const ClearCartEvent());
+
+    return await Future.delayed(const Duration(milliseconds: 1500));
+  }
+
   void _onScroll() {
     if (_isLoadingMore) return;
 
@@ -63,13 +75,17 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      controller: _scrollController,
-      children: [
-        _buildRecommendedProductsSection(),
-        _buildLatestProductsSection(),
-        const SizedBox(height: 24),
-      ],
+    return RefreshIndicator(
+      onRefresh: _refreshData,
+      color: Theme.of(context).primaryColor,
+      child: ListView(
+        controller: _scrollController,
+        children: [
+          _buildRecommendedProductsSection(),
+          _buildLatestProductsSection(),
+          const SizedBox(height: 24),
+        ],
+      ),
     );
   }
 
@@ -113,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                         size: 48,
                       ),
                       const SizedBox(height: 16),
-                      Text('Error: ${state.message}'),
+                      const Text('Something went wrong'),
                       const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: () {
@@ -121,7 +137,7 @@ class _HomePageState extends State<HomePage> {
                               .read<RecommendedProductBloc>()
                               .add(FetchRecommendedProductsEvent());
                         },
-                        child: const Text('Try Again'),
+                        child: const Text('Refresh'),
                       ),
                     ],
                   ),

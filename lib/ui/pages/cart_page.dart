@@ -27,18 +27,18 @@ class CartPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.shopping_cart_outlined,
             size: 80,
             color: Colors.grey,
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             'ตะกร้าสินค้าว่างเปล่า',
             style: Theme.of(context).textTheme.titleLarge,
           ),
-          SizedBox(height: 8),
-          Text(
+          const SizedBox(height: 8),
+          const Text(
             'เพิ่มสินค้าในหน้าแนะนำสินค้าเพื่อเริ่มการสั่งซื้อ',
             style: TextStyle(color: Colors.grey),
           ),
@@ -50,7 +50,7 @@ class CartPage extends StatelessWidget {
   Widget _buildCartList(BuildContext context, CartLoaded state) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cart'),
+        title: const Text('Cart'),
         automaticallyImplyLeading: false,
       ),
       body: Column(
@@ -96,7 +96,7 @@ class CartPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(12),
               child: Image.network(
                 'https://s3-alpha-sig.figma.com/img/cfe7/5363/3a073c55eeee417a70d9d8af308497c4?Expires=1741564800&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=IRdZpp9f56FyveknggxK45IblJpiluA9Dv62nG0z7Ss8TgjWoTr2J4dSZKNJzIUazFpGKxUIsVBlxLc4MwD2UvpE9~pKcXOQ0jdNB8tloTA2I9UjqodqxfMS~I8OGv6wUcq4tOjie99uNRp3footBeCJZh86xapFD9x81GMaq1waiJ8SqTy8z0gz1VjO6KvyNz9QzEMpv7UvDT23MJTq5RDzxjANFEabNI1xpWuC8ZIPLVy6LbjbLYMRknXTITr586LD2tsVZpH-7Bgj-SruTu7fQ7BSYWq2Ie1gDEO9yIS4lUS4wAsNsLr0UZZc0gC2PHLqguQgrx5XBIaP~Td35w__',
                 fit: BoxFit.cover,
@@ -116,12 +116,26 @@ class CartPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  '฿${item.product.price.toStringAsFixed(2)} / unit',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[700],
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Text(
+                      item.product.price.toStringAsFixed(2),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Text(
+                      ' / unit',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -180,58 +194,115 @@ class CartPage extends StatelessWidget {
   Widget _buildCheckoutSection(BuildContext context, CartLoaded state) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            spreadRadius: 2,
-            offset: Offset(0, -5),
-          ),
-        ],
+      decoration: const BoxDecoration(
+        color: Color(0xFFF5F4F8), // Light purple background
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
       ),
       child: SafeArea(
-        child: Row(
+        child: Column(
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Total',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[700],
-                    ),
+            // Subtotal Row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Subtotal',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black54,
                   ),
-                  SizedBox(height: 4),
-                  Text(
-                    '฿${state.total.toStringAsFixed(2)}',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              width: 120,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  backgroundColor: Theme.of(context).primaryColor,
-                  foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(vertical: 12),
                 ),
-                child: Text('Checkout'),
-              ),
+                Text(
+                  '${(state.total + state.totalDiscount).toStringAsFixed(2)}',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            // Promotion Discount Row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Promotion discount',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black54,
+                  ),
+                ),
+                Text(
+                  '-${state.totalDiscount.toStringAsFixed(2)}',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            // Divider
+            const Divider(
+              color: Colors.black12,
+              thickness: 1,
+            ),
+            const SizedBox(height: 16),
+            // Total and Checkout Button Row
+            Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Total',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${state.total.toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                ElevatedButton(
+                  onPressed: state.items.isNotEmpty
+                      ? () {
+                          // TODO: Implement checkout logic
+                        }
+                      : null,
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    backgroundColor: Theme.of(context).primaryColor,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 40,
+                      vertical: 12,
+                    ),
+                  ),
+                  child: const Text(
+                    'Checkout',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
