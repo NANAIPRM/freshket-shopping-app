@@ -65,14 +65,12 @@ For IDE integration:
 ## Project Structure
 
 ```
-```
 lib/
-├── config/               # Configuration Layer
+├── config/               # Configuration files
 ├── data/                 # Data Layer
 ├── logic/                # Business Logic Layer
 ├── ui/                   # Presentation Layer
-└── main.dart             # App Entry Point
-```
+└── main.dart             # Entry point
 ```
 
 ## Architecture
