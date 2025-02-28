@@ -32,18 +32,15 @@ class CustomBottomNavigationBar extends StatelessWidget {
           child: Stack(
             alignment: Alignment.bottomCenter,
             children: [
-              // Bottom navigation tabs
               Row(
                 children: [
-                  // Shopping tab
                   Expanded(
                     child: InkWell(
                       onTap: () => onTap(0),
                       child: Container(
                         decoration: BoxDecoration(
                           color: selectedIndex == 0
-                              ? Color(
-                                  0xFFF3E5F5) // Light purple background when selected
+                              ? Color(0xFFF3E5F5)
                               : Colors.white,
                         ),
                         child: Column(
@@ -67,7 +64,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // Cart tab with item count from CartBloc
                   Expanded(
                     child: InkWell(
                       onTap: () => onTap(1),
@@ -90,7 +86,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
                               builder: (context, state) {
                                 int itemCount = 0;
                                 if (state is CartLoaded) {
-                                  // Sum up the quantities of all items
                                   itemCount = state.items.fold(
                                     0,
                                     (sum, item) => sum + item.quantity,

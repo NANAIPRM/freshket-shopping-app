@@ -44,7 +44,6 @@ class _HomePageState extends State<HomePage> {
     context.read<RecommendedProductBloc>().add(FetchRecommendedProductsEvent());
     context.read<LatestProductBloc>().add(RefreshLatestProductsEvent());
 
-    // Clear the cart
     context.read<CartBloc>().add(const ClearCartEvent());
 
     return await Future.delayed(const Duration(milliseconds: 1500));
@@ -55,7 +54,6 @@ class _HomePageState extends State<HomePage> {
 
     final latestProductState = context.read<LatestProductBloc>().state;
 
-    // Only trigger load more if we have at least 20 items
     if (latestProductState is LatestProductLoaded &&
         latestProductState.products.length >= 20 &&
         !latestProductState.hasReachedMax &&

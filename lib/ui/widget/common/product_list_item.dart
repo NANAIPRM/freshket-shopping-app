@@ -33,7 +33,6 @@ class ProductListItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Image container with index overlay
           Stack(
             alignment: Alignment.topLeft,
             children: [
@@ -52,7 +51,6 @@ class ProductListItem extends StatelessWidget {
                   ),
                 ),
               ),
-              // Index indicator
             ],
           ),
           const SizedBox(width: 12),
@@ -63,9 +61,9 @@ class ProductListItem extends StatelessWidget {
                 Text(
                   product.name,
                   style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: Color.fromRGBO(33, 0, 93, 1)),
                 ),
                 const SizedBox(height: 4),
                 Row(
@@ -78,6 +76,7 @@ class ProductListItem extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
+                        color: Color.fromRGBO(79, 55, 139, 1),
                       ),
                     ),
                     const Text(
@@ -129,7 +128,7 @@ class ProductListItem extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: const Color.fromRGBO(101, 85, 143, 1),
         foregroundColor: Colors.white,
       ),
       child: const Text("Add to cart"),
@@ -141,10 +140,14 @@ class ProductListItem extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 14,
-          backgroundColor: Colors.purple[100],
+          backgroundColor: const Color.fromRGBO(101, 85, 143, 1),
           child: IconButton(
             padding: EdgeInsets.zero,
-            icon: Icon(Icons.remove, size: 16, color: Colors.purple[800]),
+            icon: const Icon(
+              Icons.remove,
+              size: 16,
+              color: Colors.white,
+            ),
             onPressed: () {
               context.read<CartBloc>().add(
                     UpdateCartItemQuantityEvent(
@@ -167,10 +170,10 @@ class ProductListItem extends StatelessWidget {
         ),
         CircleAvatar(
           radius: 14,
-          backgroundColor: Colors.purple[100],
+          backgroundColor: const Color.fromRGBO(101, 85, 143, 1),
           child: IconButton(
             padding: EdgeInsets.zero,
-            icon: Icon(Icons.add, size: 16, color: Colors.purple[800]),
+            icon: const Icon(Icons.add, size: 16, color: Colors.white),
             onPressed: () {
               context.read<CartBloc>().add(
                     UpdateCartItemQuantityEvent(

@@ -50,3 +50,7 @@ class CheckoutEvent extends CartEvent {
   @override
   List<Object?> get props => [];
 }
+
+class ResetCartStateEvent extends CartEvent {
+  const ResetCartStateEvent();
+}

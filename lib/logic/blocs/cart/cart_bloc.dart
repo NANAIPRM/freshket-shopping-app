@@ -14,6 +14,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<UpdateCartItemQuantityEvent>(_onUpdateCartItemQuantity);
     on<ClearCartEvent>(_onClearCart);
     on<CheckoutEvent>(_onCheckout);
+    on<ResetCartStateEvent>(_onResetCartState);
   }
 
   void _onAddToCart(
@@ -58,7 +59,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
     final currentState = state as CartLoaded;
 
-    // Find the item to remove
     final updatedItems = currentState.items
         .where((item) =>
             item.product.id != event.item.product.id ||
@@ -119,7 +119,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   CalculationResult _calculateTotalWithPromotion(List<CartItem> items) {
-    // Group items by product
     final groupedItems = <dynamic, List<CartItem>>{};
     for (var item in items) {
       groupedItems.putIfAbsent(item.product.id, () => []).add(item);
@@ -128,23 +127,18 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     double totalDiscount = 0.0;
     double total = 0.0;
 
-    // Calculate discount and total for each product group
     for (var group in groupedItems.values) {
       final productPrice = group.first.product.price;
       final totalQuantity = group.fold(0, (sum, item) => sum + item.quantity);
 
-      // Calculate pairs and remaining items
       final pairs = totalQuantity ~/ 2;
       final remainingItems = totalQuantity % 2;
 
-      // Calculate discounted pairs
       final pairsTotal = pairs * (productPrice * 2);
       final pairsDiscount = pairsTotal * 0.05;
 
-      // Calculate remaining items
       final remainingItemsTotal = remainingItems * productPrice;
 
-      // Sum up total and discount
       total += pairsTotal - pairsDiscount + remainingItemsTotal;
       totalDiscount += pairsDiscount;
     }
@@ -158,22 +152,25 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final currentState = state as CartLoaded;
 
     try {
-      // Convert cart items to product IDs
       final productIds =
           currentState.items.map((item) => item.product.id).toList();
 
-      // Call the checkout method in ApiService
       await _apiService.checkout(productIds);
 
-      // Clear the cart after successful checkout
       emit(const CartLoaded(items: [], total: 0.0, totalDiscount: 0.0));
 
-      // Emit success state to trigger navigation
       emit(const CartCheckoutSuccess());
+
+      emit(const CartLoaded(items: [], total: 0.0, totalDiscount: 0.0));
     } catch (e) {
-      // Handle checkout error
       emit(CartError('ไม่สามารถชำระเงินได้: $e'));
+
+      emit(currentState);
     }
+  }
+
+  void _onResetCartState(ResetCartStateEvent event, Emitter<CartState> emit) {
+    emit(const CartLoaded(items: [], total: 0.0, totalDiscount: 0.0));
   }
 }
 

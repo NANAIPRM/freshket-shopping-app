@@ -108,10 +108,8 @@ class ApiService {
               headers: {'Content-Type': 'application/json', 'accept': '*/*'}));
 
       if (response.statusCode == 204) {
-        // Return the response data if checkout is successful
         return response.data;
       } else {
-        // Throw an error if the checkout fails
         throw 'ไม่สามารถทำการชำระเงินได้: ${response.statusCode}';
       }
     } catch (e) {

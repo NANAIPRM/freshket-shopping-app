@@ -14,43 +14,44 @@ void main() {
   runApp(const MyApp());
 }
 
-// Define routes using GoRouter
 final GoRouter _router = GoRouter(
   initialLocation: '/',
   routes: [
-    ShellRoute(
-      builder: (context, state, child) {
-        return RootLayout(child: child);
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) {
+        return RootLayout(navigationShell: navigationShell);
       },
-      routes: [
-        GoRoute(
-          path: '/',
-          name: 'home',
-          pageBuilder: (context, state) {
-            return NoTransitionPage(
-              child: HomePage(),
-            );
-          },
+      branches: [
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/',
+              name: 'home',
+              builder: (context, state) {
+                return const HomePage();
+              },
+            ),
+          ],
         ),
-        GoRoute(
-          path: '/cart',
-          name: 'cart',
-          pageBuilder: (context, state) {
-            return NoTransitionPage(
-              child: CartPage(),
-            );
-          },
-        ),
-        GoRoute(
-          path: '/checkout-success',
-          name: 'checkout-success',
-          pageBuilder: (context, state) {
-            return NoTransitionPage(
-              child: CheckoutSuccessPage(),
-            );
-          },
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/cart',
+              name: 'cart',
+              builder: (context, state) {
+                return const CartPage();
+              },
+            ),
+          ],
         ),
       ],
+    ),
+    GoRoute(
+      path: '/checkout-success',
+      name: 'checkout-success',
+      builder: (context, state) {
+        return const CheckoutSuccessPage();
+      },
     ),
   ],
 );
@@ -89,50 +90,35 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Root layout that contains the bottom navigation bar
 class RootLayout extends StatelessWidget {
-  final Widget child;
+  final StatefulNavigationShell navigationShell;
 
-  const RootLayout({super.key, required this.child});
+  const RootLayout({super.key, required this.navigationShell});
 
-  @override
-  // In your RootLayout class
   @override
   Widget build(BuildContext context) {
-    // Get the current route location
+    final int currentIndex = navigationShell.currentIndex;
+
     final String location = GoRouterState.of(context).matchedLocation;
-    int currentIndex = 0;
-
-    // Determine which tab is currently active
-    if (location.startsWith('/cart')) {
-      currentIndex = 1;
-    }
-
-    // Check if we're on the success page
-    final bool isSuccessPage = location.startsWith('/checkout-success');
+    final bool isCheckoutSuccess = location.startsWith('/checkout-success');
 
     return Scaffold(
-      appBar: (currentIndex == 0 && !isSuccessPage)
+      appBar: (currentIndex == 0 && !isCheckoutSuccess)
           ? AppBar(
               backgroundColor: Theme.of(context).colorScheme.inversePrimary,
               title: const Text('Freshket Shopping App'),
             )
           : null,
-      body: child,
-      bottomNavigationBar: isSuccessPage
+      body: navigationShell,
+      bottomNavigationBar: isCheckoutSuccess
           ? null
           : CustomBottomNavigationBar(
               selectedIndex: currentIndex,
               onTap: (index) {
-                // Handle navigation with GoRouter
-                switch (index) {
-                  case 0:
-                    context.goNamed('home');
-                    break;
-                  case 1:
-                    context.goNamed('cart');
-                    break;
-                }
+                navigationShell.goBranch(
+                  index,
+                  initialLocation: index == currentIndex,
+                );
               },
             ),
     );

@@ -30,7 +30,6 @@ class LatestProductBloc extends Bloc<LatestProductEvent, LatestProductState> {
     LoadMoreLatestProductsEvent event,
     Emitter<LatestProductState> emit,
   ) async {
-    // Only fetch more if we have reached the threshold and have more to fetch
     if (_nextCursor == null || _hasReachedMax || _currentProducts.length < 20) {
       return;
     }

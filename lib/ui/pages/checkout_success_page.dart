@@ -43,7 +43,7 @@ class CheckoutSuccessPage extends StatelessWidget {
                   context.goNamed('home');
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
+                  backgroundColor: const Color.fromRGBO(101, 85, 143, 1),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
