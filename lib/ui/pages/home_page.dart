@@ -197,7 +197,7 @@ class _HomePageState extends State<HomePage> {
                         size: 48,
                       ),
                       const SizedBox(height: 16),
-                      Text('Error: ${(state as LatestProductError).message}'),
+                      Text('Something went wrong'),
                       const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: () {
@@ -205,7 +205,7 @@ class _HomePageState extends State<HomePage> {
                               .read<LatestProductBloc>()
                               .add(FetchLatestProductsEvent());
                         },
-                        child: const Text('Try Again'),
+                        child: const Text('Refresh'),
                       ),
                     ],
                   ),
